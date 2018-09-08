@@ -13,7 +13,6 @@ router.use('/delete', deleteRouter);
 const rds = require('../../privateModules/amazonWebService/rds');
 
 router.get('/:boardSeq', (req, res) => {
-	// req.headers.token;
 	// req.query.startIndex;
 	// req.query.count
 	let readCommentTaskArray = [
@@ -52,7 +51,7 @@ router.get('/:boardSeq', (req, res) => {
 				} else {
 					callback(null, 'Read comment success');
 
-					res.status(201).send({
+					res.status(200).send({
 						stat : 'Success',
 						msg : 'Read comment success',
 						data : result

@@ -5,8 +5,7 @@ const async = require('async');
 const rds = require('../../privateModules/amazonWebService/rds');
 const jsonWebToken = require('../../privateModules/jsonWebToken');
 
-router.post('/', (req, res) => {
-	let boardSeq = parseInt(req.body.boardSeq);
+router.post('/:boardSeq', (req, res) => {
 	// req.headers.token;
 
 	let likeTaskArray = [
@@ -41,7 +40,7 @@ router.post('/', (req, res) => {
 		(userSeq, connection, callback) => {
 			let likeCheckQuery = 'select seq from LikeTable where (userSeq = ? and boardSeq = ?)';
 			
-			connection.query(likeCheckQuery, [userSeq, boardSeq], (error, result) => {
+			connection.query(likeCheckQuery, [userSeq, parseInt(req.params.boardSeq)], (error, result) => {
 				if(error) {
 					connection.release();
 
@@ -57,7 +56,7 @@ router.post('/', (req, res) => {
 			if(likeCheck === 0) {
 				let insertLikeQuery = 'insert into LikeTable values (?, ?, ?)';
 
-				connection.query(insertLikeQuery, [null, userSeq, boardSeq], (error) => {
+				connection.query(insertLikeQuery, [null, userSeq, parseInt(req.params.boardSeq)], (error) => {
 					if(error) {
 						connection.release();
 
@@ -69,7 +68,7 @@ router.post('/', (req, res) => {
 			} else {
 				let deleteLikeQuery = 'delete from LikeTable where (userSeq = ? and boardSeq = ?)';
 
-				connection.query(deleteLikeQuery, [userSeq, boardSeq], (error) => {
+				connection.query(deleteLikeQuery, [userSeq, parseInt(req.params.boardSeq)], (error) => {
 					if(error) {
 						connection.release();
 
@@ -84,7 +83,7 @@ router.post('/', (req, res) => {
 			if(likeCheck === 0) {
 				let updateBoardLikeQuery = 'update Board set likeCount = likeCount + 1 where seq = ?';
 
-				connection.query(updateBoardLikeQuery, boardSeq, (error, result) => {
+				connection.query(updateBoardLikeQuery, parseInt(req.params.boardSeq), (error, result) => {
 					connection.release();
 
 					if(error) {
@@ -94,14 +93,15 @@ router.post('/', (req, res) => {
 
 						res.status(201).send({
 							stat : 'Success',
-							msg : 'Update like success'
+							msg : 'Update like success',
+							data : 1
 						});						
 					}
 				});
 			} else {
 				let updateBoardLikeQuery = 'update Board set likeCount = likeCount - 1 where seq = ?';
 
-				connection.query(updateBoardLikeQuery, boardSeq, (error, result) => {
+				connection.query(updateBoardLikeQuery, parseInt(req.paras.boardSeq), (error, result) => {
 					connection.release();
 
 					if(error) {
@@ -111,7 +111,8 @@ router.post('/', (req, res) => {
 
 						res.status(201).send({
 							stat : 'Success',
-							msg : 'Update like success'
+							msg : 'Update like success',
+							data : 0
 						});						
 					}
 				});
