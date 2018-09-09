@@ -16,7 +16,6 @@ const rds = require('../../privateModules/amazonWebService/rds');
 
 router.get('/', (req, res) => {
 	// req.query.startIndex;
-	// req.query.count
 	let selectBoardTaskArray = [
 		(callback) => {
 			rds.createConnect.getConnection((error, result) => {
@@ -35,9 +34,8 @@ router.get('/', (req, res) => {
 		(connection, callback) => {
 			let selectBoardQuery = 'select User.nickName, Board.seq, Board.title, Board.likeCount, Board.date from User join Board on User.seq = Board.userSeq order by Board.date desc limit ?, ?';
 			let startIndex = parseInt(req.query.startIndex);
-			let count = parseInt(req.query.count);
 			
-			connection.query(selectBoardQuery, [startIndex, count], (error, result) => {
+			connection.query(selectBoardQuery, [startIndex, 10], (error, result) => {
 				connection.release();
 
 				if(error) {

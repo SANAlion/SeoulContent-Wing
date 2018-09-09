@@ -10,6 +10,24 @@ const jsonWebToken = require('../../privateModules/jsonWebToken');
 router.post('/', (req, res) => {
 	let signInTaskArray = [
 		(callback) => {
+			if(req.headers.token !== undefined) {
+				jsonWebToken.checkToken(req.headers.token, (error, result) => {
+					if(error) {
+						callback(null, 'Next task');
+					} else {
+						callback('Not error, token sign-in');
+
+						res.status(201).send({
+							stat : 'Success',
+							msg : 'Not error, token sign-in'
+						});
+					}
+				});
+			} else {
+				callback(null, 'Next task');
+			}
+		},
+		(tokenAccess, callback) => {
 			if((req.body.id !== '' && req.body.id !== undefined && req.body.id !== null) && (req.body.password !== '' && req.body.password !== undefined && req.body.password !== null)) callback(null, 'validity check success');
 			else {
 				callback('Sign-in fail : not enough input');
