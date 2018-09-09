@@ -32,7 +32,7 @@ router.get('/', (req, res) => {
 			});
 		},
 		(connection, callback) => {
-			let selectBoardQuery = 'select User.nickName, Board.seq, Board.title, Board.likeCount, Board.date from User join Board on User.seq = Board.userSeq order by Board.date desc limit ?, ?';
+			let selectBoardQuery = 'select User.nickName, Board.seq, Board.title, Board.likeCount, DATE_FORMAT(Board.date, "%Y/%m/%d") as date from User join Board on User.seq = Board.userSeq order by Board.date desc limit ?, ?';
 			let startIndex = parseInt(req.query.startIndex);
 			
 			connection.query(selectBoardQuery, [startIndex, 10], (error, result) => {

@@ -28,7 +28,7 @@ router.get('/:boardSeq', (req, res) => {
 			});
 		},
 		(connection, callback) => {
-			let selectCommentQuery = 'select Comment.seq, Comment.content, Comment.date, User.nickName from Comment join User on User.seq = Comment.userSeq where boardSeq = ? order by Comment.seq desc limit ?, ? ';
+			let selectCommentQuery = 'select Comment.seq, Comment.content, DATE_FORMAT(Comment.date, "%Y/%m/%d") as date, User.nickName from Comment join User on User.seq = Comment.userSeq where boardSeq = ? order by Comment.seq desc limit ?, ? ';
 
 			connection.query(selectCommentQuery, [parseInt(req.params.boardSeq), parseInt(req.query.startIndex), 10], (error, result) => {
 				connection.release();
