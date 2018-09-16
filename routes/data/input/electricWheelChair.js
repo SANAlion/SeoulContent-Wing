@@ -3,7 +3,7 @@ const router = express.Router();
 const async = require('async');
 const request = require('request');
 
-const rds = require('../../privateModules/amazonWebService/rds');
+const rds = require('../../../privateModules/amazonWebService/rds');
 
 router.get('/', (req, res) => {
 	let electricWheelChairDataTaskArray = [
